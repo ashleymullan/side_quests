@@ -27,7 +27,7 @@ pick_episode <- function(show){
   show_title <- shows[[show_code]][["title"]]
   num_seasons <- length(shows[[show_code]])
   season <- sample(1:num_seasons, 1)
-  num_eps <- shows[[show_code]][["eps"]][i]
+  num_eps <- shows[[show_code]][["eps"]][season]
   episode <- sample(1:num_eps,1)
   print(paste0("You are going to watch Season ",
                season, " Episode ", episode, " of ",
