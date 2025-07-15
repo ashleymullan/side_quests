@@ -1,0 +1,53 @@
+---
+title: "Dropout Madness"
+format: html
+---
+
+Sam Reich has done it again! The Instagram API refuses to let poor little R programmers like me track post analytics, so I'll be tracking likes on the Shark Tank spinoff videos at 8pm Central every day for the next month.
+
+```{r}
+library(googlesheets4) #for pulling the likes
+library(ggplot2) #for data viz
+library(ggimage) #for the hearts
+
+
+base_path <- "https://docs.google.com/spreadsheets/"
+extension <- "d/1h3onlbU59kn0lEzlsDz_kxj77YD3WyVPND4TQZR-OGU/edit?usp=sharing"
+
+
+data <- read_sheet(ss = paste0(base_path, extension),
+                   sheet = "Instagram")
+logo <- readJPEG("game-changer.jpg")
+
+#font_add_google("League Gothic")
+```
+
+```{r}
+data |>
+  mutate(pic = "heart.png") |>
+  ggplot(aes(x = factor(Video, levels = Video), y = Likes_8pm_7_14)) +
+  geom_image(aes(image = pic), size=.08) +
+  theme_bw() +
+  coord_flip() +
+  labs(x = "",
+       y = "Thousands of Likes",
+       title = "GET READY FOR A GAME CHANGER!!!",
+       caption = "(i've been here the whole time)") +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(color = "#d05f41", face = "bold", 
+                                  size = 20, hjust = 0.5),
+        axis.text = element_text(size = 14, color = "#573a51", face = "bold"),
+        axis.title = element_text(size = 14, color = "#573a51", face = "bold"),
+        plot.caption = element_text(color = "#d05f41", hjust = 0.5),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1,1,1,1),"cm")) -> p
+
+
+ggsave("plots/first_day.png", height = 5, width = 8.82)
+```
+
+
+
+
+
+
