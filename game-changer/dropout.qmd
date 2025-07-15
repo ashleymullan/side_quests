@@ -14,37 +14,99 @@ library(ggimage) #for the hearts
 base_path <- "https://docs.google.com/spreadsheets/"
 extension <- "d/1h3onlbU59kn0lEzlsDz_kxj77YD3WyVPND4TQZR-OGU/edit?usp=sharing"
 
+setwd("/Users/ashleymullan/Documents/Fun/side_quests/game-changer")
 
-data <- read_sheet(ss = paste0(base_path, extension),
-                   sheet = "Instagram")
-logo <- readJPEG("game-changer.jpg")
+data <- read_sheet(ss = paste0(base_path, extension), sheet = "Instagram")
 
-#font_add_google("League Gothic")
+style_plot <- function(p){
+  p +
+    theme_bw() +
+    coord_flip() + 
+    labs(x = "", 
+         y = "Thousands of Likes", 
+         title = "GET READY FOR A GAME CHANGER!!!", 
+         caption = "(i've been here the whole time)") + 
+    theme(panel.grid = element_blank(), 
+          plot.title = element_text(color = "#d05f41", face = "bold", 
+                                  size = 20, hjust = 0.5), 
+          axis.text = element_text(size = 14, color = "#573a51", face = "bold"), 
+          axis.title = element_text(size = 14, color = "#573a51", face = "bold"), 
+          plot.caption = element_text(color = "#d05f41", hjust = 0.5), 
+          axis.ticks.y = element_blank(), 
+          plot.margin = unit(c(1,1,1,1),"cm"))
+}
 ```
 
 ```{r}
-data |>
+p <- data |>
   mutate(pic = "heart.png") |>
   ggplot(aes(x = factor(Video, levels = Video), y = Likes_8pm_7_14)) +
-  geom_image(aes(image = pic), size=.08) +
-  theme_bw() +
-  coord_flip() +
-  labs(x = "",
-       y = "Thousands of Likes",
-       title = "GET READY FOR A GAME CHANGER!!!",
-       caption = "(i've been here the whole time)") +
-  theme(panel.grid = element_blank(),
-        plot.title = element_text(color = "#d05f41", face = "bold", 
-                                  size = 20, hjust = 0.5),
-        axis.text = element_text(size = 14, color = "#573a51", face = "bold"),
-        axis.title = element_text(size = 14, color = "#573a51", face = "bold"),
-        plot.caption = element_text(color = "#d05f41", hjust = 0.5),
-        axis.ticks.y = element_blank(),
-        plot.margin = unit(c(1,1,1,1),"cm")) -> p
+  geom_point(aes(y = Likes_8pm_7_14), color = "#71958c") +
+  geom_image(aes(image = pic), size=.08)
+p <- style_plot(p)
 
 
-ggsave("plots/first_day.png", height = 5, width = 8.82)
 ```
+
+```{r}
+p <- data |>
+  mutate(likes_start = 0) |>
+  mutate(pic = "heart.png") |>
+  ggplot(aes(x = factor(Video, levels = Video), y = Likes_8pm_7_15)) +
+  #the past
+  geom_point(aes(y = Likes_8pm_7_14), color = "#71958c") +
+  #the connection
+  geom_segment(aes(y = likes_start, yend = Likes_8pm_7_15),
+               color = "#71958c") +
+  #the present
+  geom_image(aes(image = pic), size=.08) 
+
+p <- style_plot(p)
+
+ggsave("plots/second_day.png", plot = p, height = 5, width = 8.82)
+```
+
+
+```{r}
+p <- data |>
+  mutate(likes_start = 0) |>
+  mutate(pic = "heart.png") |>
+  ggplot(aes(x = factor(Video, levels = Video), y = Likes_8pm_7_16)) +
+  #the past
+  geom_point(aes(y = Likes_8pm_7_14), color = "#71958c") +
+  geom_point(aes(y = Likes_8pm_7_15), color = "#71958c") +
+  #the connection
+  geom_segment(aes(y = likes_start, yend = Likes_8pm_7_16),
+               color = "#71958c") +
+  #the present
+  geom_image(aes(image = pic), size=.08) 
+
+p <- style_plot(p)
+
+ggsave("plots/third_day.png", plot = p, height = 5, width = 8.82)
+```
+
+```{r}
+p <- data |>
+  mutate(likes_start = 0) |>
+  mutate(pic = "heart.png") |>
+  ggplot(aes(x = factor(Video, levels = Video), y = Likes_8pm_7_17)) +
+  #the past
+  geom_point(aes(y = Likes_8pm_7_14), color = "#71958c") +
+  geom_point(aes(y = Likes_8pm_7_15), color = "#71958c") +
+  geom_point(aes(y = Likes_8pm_7_16), color = "#71958c") +
+  #the connection
+  geom_segment(aes(y = likes_start, yend = Likes_8pm_7_17),
+               color = "#71958c") +
+  #the present
+  geom_image(aes(image = pic), size=.08) 
+
+p <- style_plot(p)
+
+ggsave("plots/fourth_day.png", plot = p, height = 5, width = 8.82)
+```
+
+...
 
 
 
