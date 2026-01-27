@@ -2,7 +2,7 @@
 library(stringr) #for wrapping the prompts to fit
 library(ggplot2) #for creating the bingo board
 library(dplyr) #for data wrangling
-
+library(googlesheets4) #for data pulling
 
 
 #put your lists of prompts (at least 25, at most 50) in column A of a Google
