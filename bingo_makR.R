@@ -3,20 +3,30 @@ library(stringr) #for wrapping the prompts to fit
 library(ggplot2) #for creating the bingo board
 library(dplyr) #for data wrangling
 library(googlesheets4) #for data pulling
-
+library(ggpubr) #for creating the bottom piece
+library(png) #for reading in the bottom piece
 
 #put your lists of prompts (at least 25, at most 50) in column A of a Google
 #Sheet. name the sheet "bingo" and make cell A1 "bingo_prompts"
-
+#the below is a sample sheet, feel free to duplicate
 prompt_url <- paste0("https://docs.google.com/spreadsheets/d/1nj2IJ-",
                      "imAo89ih4wjVZ_VAZSXoPy9RDaJIZHba73Uuw/edit?",
                      "gid=482537420#gid=482537420")
+
+#replace me with the image you want to go beneath your bingo board
+#must be saved locally, not a URL
+image_path <- "image_here.png"
 
 prompts <- read_sheet(prompt_url,
                       range = "bingo!A1:A50") |>
   filter(!is.na(bingo_prompts)) |>
   pull(bingo_prompts)
 
+img <- readPNG(image_path)
+
+bottom_piece <- ggplot() +
+  background_image(img) + 
+  theme_void()
 
 rows <- c(rep(1, times = 5),
           rep(2, times = 5),
@@ -26,11 +36,14 @@ rows <- c(rep(1, times = 5),
 
 cols <- rep(c(1,2,3,4,5), times = 5)
 
-bingo_header_height <- 6
+bingo_header_height <- 6 #change me to mess with "bingo" placement
 prompt_font_size <- 3
 bingo_font_size <- 8
+num_distinct_boards <- 1 #change me to generate more boards
+save_path <- "replace_me_with_directory_for_finished_boards" 
 
-bingo_board <- data.frame(rows, cols,
+for(i in 1:num_distinct_boards){
+  game_board <- data.frame(rows, cols,
                           wrapped = sample(str_wrap(prompts, 12), 25)) |>
   mutate(wrapped = c(wrapped[1:12],
                      str_wrap("FREE SPACE", 8),
@@ -51,7 +64,16 @@ bingo_board <- data.frame(rows, cols,
   theme_void() +
   theme(plot.margin = margin(5, 10, 10, 10))
 
-bingo_board #ggsave this in an appropriate size in your local directory
+  if(want_bottom_piece) {
+    bingo <- game_board / bottom_piece + plot_layout(heights = c(4,1)) #change if image is wonky
+  } else {
+    bingo <- game_board
+  }
+  file_name <- paste0(save_path, "/bingo", i, ".png")
+  ggsave(file_name, plot = bingo)
+}
+
+
 
 
 
