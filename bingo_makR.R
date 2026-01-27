@@ -40,6 +40,7 @@ bingo_header_height <- 6 #change me to mess with "bingo" placement
 prompt_font_size <- 3
 bingo_font_size <- 8
 num_distinct_boards <- 1 #change me to generate more boards
+want_bottom_piece <- TRUE #change me if you want to ignore a bottom image
 save_path <- "replace_me_with_directory_for_finished_boards" 
 
 # run this loop to save a folder full of distinct bingo boards. 
